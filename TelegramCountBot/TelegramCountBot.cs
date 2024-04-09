@@ -111,6 +111,12 @@ public class TelegramCountBot
 
     private void init_db()
     {
+        string folderName = "db";
+        if (!Directory.Exists(folderName))
+        {
+            Directory.CreateDirectory(folderName);
+        }
+
         using var connection = create_DB_Connection();
         connection.Open();
 
@@ -173,7 +179,7 @@ public class TelegramCountBot
         return await bot_client.SendTextMessageAsync(receiver_id, message, parseMode: ParseMode.Html);
     }
 
-    private string list_all(long telegram_user_id)
+    protected string list_all(long telegram_user_id)
     {
         string response = "";
         using var connection = create_DB_Connection();
@@ -181,7 +187,7 @@ public class TelegramCountBot
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = $"select name,value from {sqlite_table_name} where telegram_user_id = $telegram_user_id;";
+        command.CommandText = $"select name,value from {sqlite_table_name} where telegram_user_id = $telegram_user_id order by value desc;";
         add_parameter_with_value(command, "$telegram_user_id", telegram_user_id);
 
         using var reader = command.ExecuteReader();
@@ -250,7 +256,7 @@ public class TelegramCountBot
 
         if (names_set.Count != names.Length)
         {
-            string error = "Error, you have the same name multiple times in your list.";
+            string error = "Error, you have the same name multiple times in your list";
             throw new Exception(error);
         }
 

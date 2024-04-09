@@ -12,7 +12,7 @@ class TelegramScrabbleBot : TelegramCountBot
         commands.Add(new BotCommand(description, (s) => s.StartsWith("/reset"), reset_points));
     }
 
-    private string reset_points(long telegram_user_id)
+    private async Task<string> reset_points(long telegram_user_id)
     {
         using var connection = create_DB_Connection();
         connection.Open();
@@ -24,6 +24,8 @@ class TelegramScrabbleBot : TelegramCountBot
                     ";
         add_parameter_with_value(command, "$telegram_user_id", telegram_user_id);
         command.ExecuteNonQuery();
-        return "The points have ben reset";
+        await send_message_async(telegram_user_id, "The points have ben reset");
+        await send_message_async(telegram_user_id, list_all(telegram_user_id));
+        return "";
     }
 }
