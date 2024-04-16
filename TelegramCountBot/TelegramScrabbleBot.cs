@@ -24,7 +24,7 @@ class TelegramScrabbleBot : TelegramCountBot
                     ";
         add_parameter_with_value(command, "$telegram_user_id", telegram_user_id);
         command.ExecuteNonQuery();
-        await send_message_async(telegram_user_id, "The points have ben reset");
+        await send_message_async(telegram_user_id, "The points have been reset");
         await send_message_async(telegram_user_id, list_all(telegram_user_id));
         return "";
     }
