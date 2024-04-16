@@ -25,4 +25,4 @@ echo
 curl https://api.telegram.org/bot${SCRABBLE_BOT_TOKEN}/setWebhook?url=https://${ngrok_adress}/api/bot/scrabble
 echo
 
-docker run --rm -it -p 443:443 -e ASPNETCORE_URLS="https://0.0.0.0" -e ASPNETCORE_HTTPS_PORTS=443 -e ASPNETCORE_Kestrel__Certificates__Default__Password="${password}" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v ${HOME}/.aspnet/https:/https/ -v ${PWD}/db:/App/db telegramcountbot-image:latest
+docker run --rm -d --network=host -e ASPNETCORE_URLS="https://0.0.0.0" -e ASPNETCORE_HTTPS_PORTS=443 -e ASPNETCORE_Kestrel__Certificates__Default__Password="${password}" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v ${HOME}/.aspnet/https:/https/ -v ${PWD}/db:/App/db telegramcountbot-image:latest

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t telegramcountbot-image -f Dockerfile .
+docker build --network=host -t telegramcountbot-image -f Dockerfile .
