@@ -14,7 +14,7 @@ eval "$(
 
 ngrok http https://localhost:8443 > /dev/null &
 
-sleep 0.25
+sleep 0.5
 
 password=$(cat .cert_password)
 
