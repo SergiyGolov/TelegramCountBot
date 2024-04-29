@@ -16,7 +16,7 @@ ngrok http https://localhost:8443 > /dev/null &
 
 sleep 0.25
 
-password=$(cat ${CERT_PASSWORD_FILE_PATH})
+password=$(cat .cert_password)
 
 # source: https://stackoverflow.com/questions/39471457/ngrok-retrieve-assigned-subdomain/40144313
 ngrok_adress=$(curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"https:..([^"]*).*/\1/p')
