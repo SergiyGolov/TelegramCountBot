@@ -1,6 +1,7 @@
 #!/bin/bash
 
 killall ngrok
+docker stop telegramcountbot_container
 
 # source: https://gist.github.com/mihow/9c7f559807069a03e302605691f85572?permalink_comment_id=4245050#gistcomment-4245050
 eval "$(
@@ -11,11 +12,11 @@ eval "$(
   done
 )"
 
-ngrok http https://localhost:443 > /dev/null &
+ngrok http https://localhost:8443 > /dev/null &
 
-read -s -p "Certificate password: " password
+sleep 0.25
 
-echo
+password=$(cat ${CERT_PASSWORD_FILE_PATH})
 
 # source: https://stackoverflow.com/questions/39471457/ngrok-retrieve-assigned-subdomain/40144313
 ngrok_adress=$(curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"https:..([^"]*).*/\1/p')
@@ -25,4 +26,4 @@ echo
 curl https://api.telegram.org/bot${SCRABBLE_BOT_TOKEN}/setWebhook?url=https://${ngrok_adress}/api/bot/scrabble
 echo
 
-docker run --rm -d --network=host -e ASPNETCORE_URLS="https://0.0.0.0" -e ASPNETCORE_HTTPS_PORTS=443 -e ASPNETCORE_Kestrel__Certificates__Default__Password="${password}" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v ${HOME}/.aspnet/https:/https/ -v ${PWD}/db:/App/db telegramcountbot-image:latest
+docker run --rm --name telegramcountbot_container -d -p 8443:8443 -e ASPNETCORE_URLS="https://0.0.0.0" -e ASPNETCORE_HTTPS_PORTS=8443 -e ASPNETCORE_Kestrel__Certificates__Default__Password="${password}" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v ${HOME}/.aspnet/https:/https/ -v ${PWD}/db:/App/db telegramcountbot-image:latest
